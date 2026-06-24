@@ -618,11 +618,16 @@ def test_all_modules_import_successfully():
 
 from unittest.mock import MagicMock, patch
 
+import importlib
 from cai_workbench_mcp_server.src.functions.generate_diag_bundle import generate_diag_bundle
 from cai_workbench_mcp_server.src.functions.get_diag_bundle_status import get_diag_bundle_status
 from cai_workbench_mcp_server.src.functions.download_diag_bundle import download_diag_bundle
 from cai_workbench_mcp_server.src.functions.health_check import health_check
 from cai_workbench_mcp_server.src.functions.batch_list_projects import batch_list_projects
+
+def _mod(name):
+    """Return the actual module object, bypassing __init__.py re-exports."""
+    return importlib.import_module(f"cai_workbench_mcp_server.src.functions.{name}")
 
 
 def test_health_check_healthy(mock_config):
@@ -630,7 +635,7 @@ def test_health_check_healthy(mock_config):
     mock_result = MagicMock()
     mock_result.to_dict.return_value = {"projects": [], "next_page_token": ""}
     mock_client.list_projects.return_value = mock_result
-    with patch("cai_workbench_mcp_server.src.functions.health_check.setup_client", return_value=mock_client):
+    with patch.object(_mod("health_check"), "setup_client", return_value=mock_client):
         result = health_check(mock_config, {})
     assert result["success"] is True
     assert result["status"] == "HEALTHY"
@@ -643,8 +648,7 @@ def test_health_check_missing_host():
 
 
 def test_health_check_connection_failure(mock_config):
-    with patch("cai_workbench_mcp_server.src.functions.health_check.setup_client",
-               side_effect=Exception("Connection failed")):
+    with patch.object(_mod("health_check"), "setup_client", side_effect=Exception("Connection failed")):
         result = health_check(mock_config, {})
     assert result["success"] is False
     assert result["status"] == "UNHEALTHY"
@@ -655,7 +659,7 @@ def test_generate_diag_bundle_success(mock_config):
     mock_result = MagicMock()
     mock_result.to_dict.return_value = {"status": "DIAG_IN_PROGRESS"}
     mock_client.generate_diag_bundle.return_value = mock_result
-    with patch("cai_workbench_mcp_server.src.functions.generate_diag_bundle.setup_client", return_value=mock_client):
+    with patch.object(_mod("generate_diag_bundle"), "setup_client", return_value=mock_client):
         result = generate_diag_bundle(mock_config, {})
     assert result["success"] is True
     assert "started" in result["message"]
@@ -672,7 +676,7 @@ def test_get_diag_bundle_status_returns_status(mock_config):
     mock_result = MagicMock()
     mock_result.to_dict.return_value = {"status": "DIAG_COMPLETED"}
     mock_client.get_diag_bundle_status.return_value = mock_result
-    with patch("cai_workbench_mcp_server.src.functions.get_diag_bundle_status.setup_client", return_value=mock_client):
+    with patch.object(_mod("get_diag_bundle_status"), "setup_client", return_value=mock_client):
         result = get_diag_bundle_status(mock_config, {"request_id": "req-123"})
     assert result["success"] is True
     assert "DIAG_COMPLETED" in result["message"]
@@ -687,7 +691,7 @@ def test_download_diag_bundle_missing_request_id(mock_config):
 def test_download_diag_bundle_success(mock_config):
     mock_client = MagicMock()
     mock_client.download_diagnostics_bundle.return_value = b"bundle"
-    with patch("cai_workbench_mcp_server.src.functions.download_diag_bundle.setup_client", return_value=mock_client):
+    with patch.object(_mod("download_diag_bundle"), "setup_client", return_value=mock_client):
         result = download_diag_bundle(mock_config, {"request_id": "req-789"})
     assert result["success"] is True
 
@@ -697,7 +701,7 @@ def test_batch_list_projects_include_all(mock_config):
     page = MagicMock()
     page.to_dict.return_value = {"projects": [{"name": "pub", "id": "p1"}], "next_page_token": None}
     mock_client.list_projects.return_value = page
-    with patch("cai_workbench_mcp_server.src.functions.batch_list_projects.setup_client", return_value=mock_client):
+    with patch.object(_mod("batch_list_projects"), "setup_client", return_value=mock_client):
         result = batch_list_projects(mock_config, {"include_all_projects": True})
     assert result["success"] is True
     assert mock_client.list_projects.call_args[1].get("include_all_projects") is True
@@ -708,7 +712,7 @@ def test_get_project_id_include_all_flag(mock_config):
     page = MagicMock()
     page.to_dict.return_value = {"projects": [{"name": "p", "id": "p1"}], "next_page_token": None}
     mock_client.list_projects.return_value = page
-    with patch("cai_workbench_mcp_server.src.functions.get_project_id.setup_client", return_value=mock_client):
+    with patch.object(_mod("get_project_id"), "setup_client", return_value=mock_client):
         result = get_project_id(mock_config, {"project_name": "p", "include_all_projects": True})
     assert result["status"] == "success"
     assert mock_client.list_projects.call_args[1].get("include_all_projects") is True
@@ -719,7 +723,7 @@ def test_get_project_id_no_include_flags_by_default(mock_config):
     page = MagicMock()
     page.to_dict.return_value = {"projects": [], "next_page_token": None}
     mock_client.list_projects.return_value = page
-    with patch("cai_workbench_mcp_server.src.functions.get_project_id.setup_client", return_value=mock_client):
+    with patch.object(_mod("get_project_id"), "setup_client", return_value=mock_client):
         get_project_id(mock_config, {"project_name": "*"})
     call_kwargs = mock_client.list_projects.call_args[1]
     assert "include_all_projects" not in call_kwargs
