@@ -5,5 +5,5 @@ A comprehensive Model Context Protocol (MCP) server for Cloudera Machine Learnin
 supporting multiple transport modes with OAuth 2.1 authorization.
 """
 
-__version__ = "1.0.0"
+__version__ = "2.1.0"
 

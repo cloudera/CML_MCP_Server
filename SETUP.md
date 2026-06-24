@@ -131,7 +131,7 @@ Append `@ref` to the Git URL (PEP 440 VCS URL syntax):
 | Target | Example suffix on the repo URL |
 |--------|----------------------------------|
 | Branch | `...git@dev` |
-| Tag | `...git@v2.0.0` |
+| Tag | `...git@v2.1.0` |
 | Commit SHA | `...git@a1b2c3d4` |
 
 Example with a release tag:
@@ -143,7 +143,7 @@ Example with a release tag:
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/cloudera/CAI_Workbench_MCP_Server.git@v2.0.0",
+        "git+https://github.com/cloudera/CAI_Workbench_MCP_Server.git@v2.1.0",
         "--with",
         "https://ml-xxxx.cloudera.site/api/v2/python.tar.gz",
         "cai-workbench-mcp-stdio"
@@ -163,7 +163,7 @@ Example with a release tag:
 
 ```bash
 uvx --no-cache \
-  --from "git+https://github.com/cloudera/CAI_Workbench_MCP_Server.git@v2.0.0" \
+  --from "git+https://github.com/cloudera/CAI_Workbench_MCP_Server.git@v2.1.0" \
   --with "https://ml-xxxx.cloudera.site/api/v2/python.tar.gz" \
   cai-workbench-mcp-stdio
 ```

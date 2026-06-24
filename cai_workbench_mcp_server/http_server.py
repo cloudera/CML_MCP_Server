@@ -572,7 +572,7 @@ async def mcp_protocol_endpoint(request):
                     "capabilities": {"tools": {}},
                     "serverInfo": {
                         "name": "cloudera-ml-http",
-                        "version": "1.0.0"
+                        "version": "2.1.0"
                     }
                 }
             })

@@ -59,6 +59,10 @@ try:
     from .src.functions.delete_v2_key import delete_v2_key
     from .src.functions.delete_v2_keys import delete_v2_keys
     from .src.functions.validate_api_key import validate_api_key
+    from .src.functions.generate_diag_bundle import generate_diag_bundle
+    from .src.functions.get_diag_bundle_status import get_diag_bundle_status
+    from .src.functions.download_diag_bundle import download_diag_bundle
+    from .src.functions.health_check import health_check
     from .src.functions.list_cpu_profiles import list_cpu_profiles
     from .src.functions.list_groups_quota import list_groups_quota
     from .src.functions.list_users_quota import list_users_quota
@@ -166,6 +170,10 @@ except ImportError:
     from src.functions.delete_v2_key import delete_v2_key
     from src.functions.delete_v2_keys import delete_v2_keys
     from src.functions.validate_api_key import validate_api_key
+    from src.functions.generate_diag_bundle import generate_diag_bundle
+    from src.functions.get_diag_bundle_status import get_diag_bundle_status
+    from src.functions.download_diag_bundle import download_diag_bundle
+    from src.functions.health_check import health_check
     from src.functions.list_cpu_profiles import list_cpu_profiles
     from src.functions.list_groups_quota import list_groups_quota
     from src.functions.list_users_quota import list_users_quota
@@ -693,30 +701,46 @@ def stop_job_run_tool(job_id: str, run_id: str, project_id: str = None) -> str:
 
 # Project Management
 @mcp.tool()
-def get_project_id_tool(project_name: str) -> str:
+def get_project_id_tool(project_name: str, include_all_projects: bool = False, include_public_projects: bool = False) -> str:
     """
     Get project ID from a project name.
-    
+
     Args:
         project_name: Name of the project to find. Use "*" to list all projects.
-        
+        include_all_projects: If true, includes all workspace projects (admin) or all accessible including public ones.
+        include_public_projects: If true, includes public projects the user has access to.
+
     Returns:
         JSON string with project information and ID
     """
     config = get_config()
-    result = get_project_id(config, {"project_name": project_name})
+    params = {"project_name": project_name}
+    if include_all_projects:
+        params["include_all_projects"] = True
+    elif include_public_projects:
+        params["include_public_projects"] = True
+    result = get_project_id(config, params)
     return json.dumps(result, indent=2)
 
 @mcp.tool()
-def list_projects_tool() -> str:
+def list_projects_tool(include_all_projects: bool = False, include_public_projects: bool = False) -> str:
     """
     List all available projects.
-    
+
+    Args:
+        include_all_projects: If true, includes all workspace projects (admin) or all accessible including public ones.
+        include_public_projects: If true, includes public projects the user has access to.
+
     Returns:
         JSON string with all project information
     """
     config = get_config()
-    result = get_project_id(config, {"project_name": "*"})
+    params = {"project_name": "*"}
+    if include_all_projects:
+        params["include_all_projects"] = True
+    elif include_public_projects:
+        params["include_public_projects"] = True
+    result = get_project_id(config, params)
     return json.dumps(result, indent=2)
 
 @mcp.tool()
@@ -2527,6 +2551,70 @@ def list_all_resource_groups_tool() -> str:
 def list_all_accelerator_node_labels_tool() -> str:
     """List accelerator node labels."""
     return json.dumps(list_all_accelerator_node_labels(get_config(), {}), indent=2)
+
+
+@mcp.tool()
+def health_check_tool() -> str:
+    """Check connectivity and authentication to Cloudera AI Workbench.
+
+    Returns:
+        JSON string with status HEALTHY or UNHEALTHY and connection details
+    """
+    return json.dumps(health_check(get_config(), {}), indent=2)
+
+
+@mcp.tool()
+def generate_diag_bundle_tool(start_time: str = None, end_time: str = None) -> str:
+    """Generate a diagnostics bundle for the Cloudera AI Workbench.
+
+    Initiates bundle generation and returns a request_id.
+    Use get_diag_bundle_status_tool to poll for completion, then
+    download_diag_bundle_tool to retrieve the bundle.
+
+    Args:
+        start_time: Start time for diagnostics collection (optional)
+        end_time: End time for diagnostics collection (optional)
+
+    Returns:
+        JSON string with request_id and initial status
+    """
+    params = {}
+    if start_time:
+        params["start_time"] = start_time
+    if end_time:
+        params["end_time"] = end_time
+    return json.dumps(generate_diag_bundle(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def get_diag_bundle_status_tool(request_id: str) -> str:
+    """Get the status of a diagnostics bundle generation request.
+
+    Status values: DIAG_IN_PROGRESS, DIAG_COMPLETED, DIAG_FAILED, DIAG_NOT_STARTED
+
+    Args:
+        request_id: The request ID returned by generate_diag_bundle_tool
+
+    Returns:
+        JSON string with status and timing information
+    """
+    return json.dumps(get_diag_bundle_status(get_config(), {"request_id": request_id}), indent=2)
+
+
+@mcp.tool()
+def download_diag_bundle_tool(request_id: str) -> str:
+    """Download a completed diagnostics bundle.
+
+    The bundle must have status DIAG_COMPLETED. Check with
+    get_diag_bundle_status_tool before calling this.
+
+    Args:
+        request_id: The request ID of the completed diagnostics bundle
+
+    Returns:
+        JSON string with download result
+    """
+    return json.dumps(download_diag_bundle(get_config(), {"request_id": request_id}), indent=2)
 
 
 def main():

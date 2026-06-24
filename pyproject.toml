@@ -1,6 +1,6 @@
 [project]
 name = "cai-workbench-mcp-server"
-version = "2.0.0"
+version = "2.1.0"
 description = "Cloudera AI Workbench Model Context Protocol (MCP) Server"
 readme = "README.md"
 requires-python = ">=3.10"
