@@ -31,7 +31,7 @@ def update_job(config: Dict[str, str], params: Dict[str, Any]) -> Dict[str, Any]
             body[key] = params[key]
     if params.get("environment_variables"):
         env = params["environment_variables"]
-        body["environment_variables"] = json.loads(env) if isinstance(env, str) else env
+        body["environment"] = json.loads(env) if isinstance(env, str) else env
 
     try:
         client = setup_client(config["host"], config["api_key"])
