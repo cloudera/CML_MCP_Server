@@ -598,6 +598,10 @@ def test_all_modules_import_successfully():
     import cai_workbench_mcp_server.src.functions.get_default_quotas
     import cai_workbench_mcp_server.src.functions.list_all_resource_groups
     import cai_workbench_mcp_server.src.functions.list_all_accelerator_node_labels
+    import cai_workbench_mcp_server.src.functions.health_check
+    import cai_workbench_mcp_server.src.functions.generate_diag_bundle
+    import cai_workbench_mcp_server.src.functions.get_diag_bundle_status
+    import cai_workbench_mcp_server.src.functions.download_diag_bundle
     import cai_workbench_mcp_server.src.functions.http_helpers
     
     # upload_folder requires cmlapi (optional), only import if available
@@ -606,6 +610,120 @@ def test_all_modules_import_successfully():
     
     # If we got here, all imports succeeded
     assert True
+
+
+# =============================================================================
+# TEST 8: DSE-58386 — Health Check, Diagnostics, include_all_projects
+# =============================================================================
+
+from unittest.mock import MagicMock, patch
+
+from cai_workbench_mcp_server.src.functions.generate_diag_bundle import generate_diag_bundle
+from cai_workbench_mcp_server.src.functions.get_diag_bundle_status import get_diag_bundle_status
+from cai_workbench_mcp_server.src.functions.download_diag_bundle import download_diag_bundle
+from cai_workbench_mcp_server.src.functions.health_check import health_check
+from cai_workbench_mcp_server.src.functions.batch_list_projects import batch_list_projects
+
+
+def test_health_check_healthy(mock_config):
+    mock_client = MagicMock()
+    mock_result = MagicMock()
+    mock_result.to_dict.return_value = {"projects": [], "next_page_token": ""}
+    mock_client.list_projects.return_value = mock_result
+    with patch("cai_workbench_mcp_server.src.functions.health_check.setup_client", return_value=mock_client):
+        result = health_check(mock_config, {})
+    assert result["success"] is True
+    assert result["status"] == "HEALTHY"
+
+
+def test_health_check_missing_host():
+    result = health_check({"host": "", "api_key": "key"}, {})
+    assert result["success"] is False
+    assert result["status"] == "UNHEALTHY"
+
+
+def test_health_check_connection_failure(mock_config):
+    with patch("cai_workbench_mcp_server.src.functions.health_check.setup_client",
+               side_effect=Exception("Connection failed")):
+        result = health_check(mock_config, {})
+    assert result["success"] is False
+    assert result["status"] == "UNHEALTHY"
+
+
+def test_generate_diag_bundle_success(mock_config):
+    mock_client = MagicMock()
+    mock_result = MagicMock()
+    mock_result.to_dict.return_value = {"status": "DIAG_IN_PROGRESS"}
+    mock_client.generate_diag_bundle.return_value = mock_result
+    with patch("cai_workbench_mcp_server.src.functions.generate_diag_bundle.setup_client", return_value=mock_client):
+        result = generate_diag_bundle(mock_config, {})
+    assert result["success"] is True
+    assert "started" in result["message"]
+
+
+def test_get_diag_bundle_status_missing_request_id(mock_config):
+    result = get_diag_bundle_status(mock_config, {})
+    assert result["success"] is False
+    assert "request_id" in result["message"]
+
+
+def test_get_diag_bundle_status_returns_status(mock_config):
+    mock_client = MagicMock()
+    mock_result = MagicMock()
+    mock_result.to_dict.return_value = {"status": "DIAG_COMPLETED"}
+    mock_client.get_diag_bundle_status.return_value = mock_result
+    with patch("cai_workbench_mcp_server.src.functions.get_diag_bundle_status.setup_client", return_value=mock_client):
+        result = get_diag_bundle_status(mock_config, {"request_id": "req-123"})
+    assert result["success"] is True
+    assert "DIAG_COMPLETED" in result["message"]
+
+
+def test_download_diag_bundle_missing_request_id(mock_config):
+    result = download_diag_bundle(mock_config, {})
+    assert result["success"] is False
+    assert "request_id" in result["message"]
+
+
+def test_download_diag_bundle_success(mock_config):
+    mock_client = MagicMock()
+    mock_client.download_diagnostics_bundle.return_value = b"bundle"
+    with patch("cai_workbench_mcp_server.src.functions.download_diag_bundle.setup_client", return_value=mock_client):
+        result = download_diag_bundle(mock_config, {"request_id": "req-789"})
+    assert result["success"] is True
+
+
+def test_batch_list_projects_include_all(mock_config):
+    mock_client = MagicMock()
+    page = MagicMock()
+    page.to_dict.return_value = {"projects": [{"name": "pub", "id": "p1"}], "next_page_token": None}
+    mock_client.list_projects.return_value = page
+    with patch("cai_workbench_mcp_server.src.functions.batch_list_projects.setup_client", return_value=mock_client):
+        result = batch_list_projects(mock_config, {"include_all_projects": True})
+    assert result["success"] is True
+    assert mock_client.list_projects.call_args[1].get("include_all_projects") is True
+
+
+def test_get_project_id_include_all_flag(mock_config):
+    mock_client = MagicMock()
+    page = MagicMock()
+    page.to_dict.return_value = {"projects": [{"name": "p", "id": "p1"}], "next_page_token": None}
+    mock_client.list_projects.return_value = page
+    with patch("cai_workbench_mcp_server.src.functions.get_project_id.setup_client", return_value=mock_client):
+        result = get_project_id(mock_config, {"project_name": "p", "include_all_projects": True})
+    assert result["status"] == "success"
+    assert mock_client.list_projects.call_args[1].get("include_all_projects") is True
+
+
+def test_get_project_id_no_include_flags_by_default(mock_config):
+    mock_client = MagicMock()
+    page = MagicMock()
+    page.to_dict.return_value = {"projects": [], "next_page_token": None}
+    mock_client.list_projects.return_value = page
+    with patch("cai_workbench_mcp_server.src.functions.get_project_id.setup_client", return_value=mock_client):
+        get_project_id(mock_config, {"project_name": "*"})
+    call_kwargs = mock_client.list_projects.call_args[1]
+    assert "include_all_projects" not in call_kwargs
+    assert "include_public_projects" not in call_kwargs
 
 
 if __name__ == "__main__":

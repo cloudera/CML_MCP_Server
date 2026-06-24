@@ -11,14 +11,29 @@ except ImportError:
 from .http_helpers import setup_client, serialize_result
 
 def batch_list_projects(config: Dict[str, str], params: Dict[str, Any]) -> Dict[str, Any]:
-    """List all projects with pagination."""
+    """List all projects with pagination.
+
+    Args:
+        config: MCP configuration with host and api_key
+        params: Optional parameters:
+            - include_all_projects: If true, returns all workspace projects (admin) or all accessible projects including public ones
+            - include_public_projects: If true, includes public projects the user can access
+            - search_filter: Filter string e.g. {"name":"foo"}
+    """
     params = params or {}
     try:
         client = setup_client(config["host"], config["api_key"])
         all_projects = []
         page_token = None
+        base_kwargs = {"page_size": 100}
+        if params.get("include_all_projects"):
+            base_kwargs["include_all_projects"] = True
+        elif params.get("include_public_projects"):
+            base_kwargs["include_public_projects"] = True
+        if params.get("search_filter"):
+            base_kwargs["search_filter"] = params["search_filter"]
         while True:
-            kwargs = {"page_size": 100}
+            kwargs = dict(base_kwargs)
             if page_token:
                 kwargs["page_token"] = page_token
             result = client.list_projects(**kwargs)

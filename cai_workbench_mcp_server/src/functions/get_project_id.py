@@ -12,7 +12,15 @@ except ImportError:
 from .http_helpers import setup_client, serialize_result
 
 def get_project_id(config: Dict[str, str], params: Dict[str, Any]) -> Dict[str, Any]:
-    """Get project ID from a project name."""
+    """Get project ID from a project name. Use '*' to list all projects.
+
+    Args:
+        config: MCP configuration with host and api_key
+        params:
+            - project_name: Project name to look up, or '*' to list all (required)
+            - include_all_projects: If true, includes all workspace/public projects
+            - include_public_projects: If true, includes public projects
+    """
     params = params or {}
     project_name = params.get("project_name")
     if not project_name:
@@ -22,8 +30,13 @@ def get_project_id(config: Dict[str, str], params: Dict[str, Any]) -> Dict[str, 
         client = setup_client(config["host"], config["api_key"])
         all_projects = []
         page_token = None
+        base_kwargs = {"page_size": 100}
+        if params.get("include_all_projects"):
+            base_kwargs["include_all_projects"] = True
+        elif params.get("include_public_projects"):
+            base_kwargs["include_public_projects"] = True
         while True:
-            kwargs = {"page_size": 100}
+            kwargs = dict(base_kwargs)
             if page_token:
                 kwargs["page_token"] = page_token
             result = client.list_projects(**kwargs)
