@@ -30,7 +30,7 @@ def create_job_run(config: Dict[str, str], params: Dict[str, Any]) -> Dict[str, 
         body["runtime_identifier"] = params["runtime_identifier"]
     if params.get("environment_variables"):
         env = params["environment_variables"]
-        body["environment_variables"] = json.loads(env) if isinstance(env, str) else env
+        body["environment"] = json.loads(env) if isinstance(env, str) else env
     if params.get("override_config"):
         oc = params["override_config"]
         body["override_config"] = json.loads(oc) if isinstance(oc, str) else oc

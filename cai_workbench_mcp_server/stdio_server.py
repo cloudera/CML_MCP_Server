@@ -401,12 +401,13 @@ def update_project_file_metadata_tool(file_path: str, description: str = None,
 
 # Job Management
 @mcp.tool()
-def create_job_tool(name: str, script: str, kernel: str = "python3", 
+def create_job_tool(name: str, script: str, kernel: str = "python3",
                    cpu: int = 1, memory: int = 1, nvidia_gpu: int = 0,
-                   runtime_identifier: str = None, project_id: str = None) -> str:
+                   runtime_identifier: str = None, project_id: str = None,
+                   environment_variables: str = None) -> str:
     """
     Create a new Cloudera AI job.
-    
+
     Args:
         name: Job name
         script: Script path relative to project root
@@ -416,23 +417,31 @@ def create_job_tool(name: str, script: str, kernel: str = "python3",
         nvidia_gpu: Number of GPUs (default: 0)
         runtime_identifier: Runtime environment identifier
         project_id: Project ID (optional - if not provided, uses default from configuration)
-    
+        environment_variables: JSON string of default environment variables for job runs (optional)
+
     Returns:
         JSON string with job creation results
     """
     config = get_config()
     if project_id:
         config["project_id"] = project_id
-    
-    result = create_job(config, {
+
+    params = {
         "name": name,
         "script": script,
         "kernel": kernel,
         "cpu": cpu,
         "memory": memory,
         "nvidia_gpu": nvidia_gpu,
-        "runtime_identifier": runtime_identifier
-    })
+        "runtime_identifier": runtime_identifier,
+    }
+    if environment_variables is not None:
+        try:
+            params["environment_variables"] = json.loads(environment_variables)
+        except json.JSONDecodeError:
+            return json.dumps({"success": False, "message": "Invalid JSON for environment_variables"})
+
+    result = create_job(config, params)
     return json.dumps(result, indent=2)
 
 @mcp.tool()

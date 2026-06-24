@@ -35,6 +35,10 @@ def create_job(config: Dict[str, str], params: Dict[str, Any]) -> Dict[str, Any]
     }
     if params.get("runtime_identifier"):
         body["runtime_identifier"] = params["runtime_identifier"]
+    if params.get("environment_variables"):
+        import json as _json
+        env = params["environment_variables"]
+        body["environment"] = _json.loads(env) if isinstance(env, str) else env
 
     try:
         client = setup_client(config["host"], config["api_key"])
