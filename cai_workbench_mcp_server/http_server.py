@@ -117,24 +117,71 @@ from .src.functions.get_default_quota import get_default_quota
 from .src.functions.get_default_quotas import get_default_quotas
 from .src.functions.list_all_resource_groups import list_all_resource_groups
 from .src.functions.list_all_accelerator_node_labels import list_all_accelerator_node_labels
+from .src.functions.health_check import health_check
+from .src.functions.generate_diag_bundle import generate_diag_bundle
+from .src.functions.get_diag_bundle_status import get_diag_bundle_status
+from .src.functions.download_diag_bundle import download_diag_bundle
+
+# Per-request auth for multi-tenant HTTP mode. Imported unconditionally so
+# tests that exercise the ContextVar don't have to monkey-patch the module,
+# but only *used* when MCP_MODE=http (the default for this entry point).
+from .auth import (
+    DownstreamBearerMiddleware,
+    NoRequestConfigError,
+    get_request_config,
+    resolve_workbench_host,
+)
 
 
-def get_config() -> Dict[str, str]:
-    """Get configuration from Docker secrets or environment variables."""
-    
+# Mode selector. The HTTP entry point defaults to ``http`` (multi-tenant,
+# per-request identity from the sidecar). Local development can force
+# ``stdio`` here to reuse the env-var / secret-file config path — useful
+# when running this server directly without the translation sidecar in
+# front of it.
+MCP_MODE = os.environ.get("MCP_MODE", "http").strip().lower()
+
+
+def _read_config_from_env() -> Dict[str, str]:
+    """Read a full ``{host, api_key, project_id, team}`` config from
+    Docker secrets or env vars — the pre-multi-tenant path.
+
+    Kept for ``MCP_MODE=stdio`` local development. The pod never uses this;
+    it runs in ``http`` mode and expects the sidecar to supply per-request
+    identity.
+    """
+
     def read_secret_or_env(secret_name: str, env_var: str) -> str:
         secret_file = f"/run/secrets/{secret_name}"
         if os.path.exists(secret_file):
-            with open(secret_file, 'r') as f:
+            with open(secret_file, "r") as f:
                 return f.read().strip()
         return os.environ.get(env_var, "")
-    
+
     return {
         "host": read_secret_or_env("cai_workbench_host", "CAI_WORKBENCH_HOST"),
         "api_key": read_secret_or_env("cai_workbench_api_key", "CAI_WORKBENCH_API_KEY"),
         "project_id": read_secret_or_env("cai_workbench_project_id", "CAI_WORKBENCH_PROJECT_ID"),
         "team": read_secret_or_env("cai_workbench_team", "CAI_WORKBENCH_TEAM"),
     }
+
+
+def get_config() -> Dict[str, str]:
+    """Return the current request's workbench config.
+
+    In ``http`` mode (the deployed default), the middleware has installed
+    a per-request dict on the :data:`auth.context.request_config` ContextVar
+    — pop it off and hand it to the tool. Never fall back to env vars here:
+    that fallback is exactly the single-tenant bug this rewrite fixes.
+
+    In ``stdio`` mode (local dev override), read from Docker secrets / env
+    variables, matching the historic behaviour and ``stdio_server.py``.
+    """
+    if MCP_MODE == "stdio":
+        return _read_config_from_env()
+    # http mode — the middleware must have set request_config before any
+    # tool body ran. If it didn't, that's a programming error and we let
+    # NoRequestConfigError bubble out with the descriptive message.
+    return get_request_config()
 
 
 # Initialize FastMCP server for HTTP
@@ -1486,35 +1533,155 @@ def list_all_accelerator_node_labels_tool() -> str:
     return json.dumps(list_all_accelerator_node_labels(get_config(), {}), indent=2)
 
 
+# --- Diagnostic tools (parity with stdio_server.py) ------------------------
+
+@mcp.tool()
+def health_check_tool() -> str:
+    """Check connectivity and authentication to Cloudera AI Workbench.
+
+    Returns:
+        JSON string with status HEALTHY or UNHEALTHY and connection details
+    """
+    return json.dumps(health_check(get_config(), {}), indent=2)
+
+
+@mcp.tool()
+def generate_diag_bundle_tool(start_time: str = None, end_time: str = None) -> str:
+    """Generate a diagnostics bundle for the Cloudera AI Workbench.
+
+    Initiates bundle generation and returns a request_id.
+    Use get_diag_bundle_status_tool to poll for completion, then
+    download_diag_bundle_tool to retrieve the bundle.
+
+    Args:
+        start_time: Start time for diagnostics collection (optional)
+        end_time: End time for diagnostics collection (optional)
+
+    Returns:
+        JSON string with request_id and initial status
+    """
+    params = {}
+    if start_time:
+        params["start_time"] = start_time
+    if end_time:
+        params["end_time"] = end_time
+    return json.dumps(generate_diag_bundle(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def get_diag_bundle_status_tool(request_id: str) -> str:
+    """Get the status of a diagnostics bundle generation request.
+
+    Status values: DIAG_IN_PROGRESS, DIAG_COMPLETED, DIAG_FAILED, DIAG_NOT_STARTED
+
+    Args:
+        request_id: The request ID returned by generate_diag_bundle_tool
+
+    Returns:
+        JSON string with status and timing information
+    """
+    return json.dumps(get_diag_bundle_status(get_config(), {"request_id": request_id}), indent=2)
+
+
+@mcp.tool()
+def download_diag_bundle_tool(request_id: str) -> str:
+    """Download a completed diagnostics bundle.
+
+    The bundle must have status DIAG_COMPLETED. Check with
+    get_diag_bundle_status_tool before calling this.
+
+    Args:
+        request_id: The request ID of the completed diagnostics bundle
+
+    Returns:
+        JSON string with download result
+    """
+    return json.dumps(download_diag_bundle(get_config(), {"request_id": request_id}), indent=2)
+
+
+def _count_registered_tools() -> str:
+    """Best-effort tool count for the startup banner.
+
+    FastMCP 2.x exposes ``_tool_manager._tools``; FastMCP 3.x replaced that
+    with an async ``list_tools()``. Since ``pyproject.toml`` allows both
+    (``fastmcp>=2.11.0``), we try both and fall back to ``"?"`` so the
+    banner never blocks startup.
+    """
+    tm = getattr(mcp, "_tool_manager", None)
+    if tm is not None and hasattr(tm, "_tools"):
+        return str(len(tm._tools))
+    try:
+        import asyncio
+
+        return str(len(asyncio.get_event_loop_policy().new_event_loop().run_until_complete(mcp.list_tools())))
+    except Exception:
+        return "?"
+
+
 def main():
-    """Run the HTTP server."""
-    config = get_config()
-    
-    # Check configuration
-    if not config.get("host") or not config.get("api_key"):
-        print("Error: Missing required configuration")
-        print("Please set CAI_WORKBENCH_HOST and CAI_WORKBENCH_API_KEY")
-        return
-    
-    # Get host and port from environment or use defaults
-    host = os.getenv("CAI_MCP_HOST", "0.0.0.0")
-    port = int(os.getenv("CAI_MCP_PORT", "8000"))
-    
-    print("Starting Cloudera AI HTTP Server...")
-    print(f"Connected to: {config['host']}")
-    print(f"Tools available: {len(mcp._tool_manager._tools)}")
-    print(f"Server will start on {host}:{port}")
-    print("")
-    print("Endpoints:")
-    print(f"  - MCP Protocol: http://localhost:{port}/mcp-api")
-    print(f"  - Debug tools:  http://localhost:{port}/debug/tools")
-    print(f"  - Debug call:   http://localhost:{port}/debug/call")
-    print(f"  - Test status:  http://localhost:{port}/test")
-    print("")
-    print("⚠️  WARNING: No authentication - development use only!")
-    
-    # Run HTTP server
-    mcp.run(transport="http", host=host, port=port)
+    """Run the HTTP MCP server.
+
+    Two modes, selected by the ``MCP_MODE`` env var:
+
+    - ``http`` (default) — pod deployment behind the translation sidecar.
+      Auth comes per-request from the ``X-CAI-Downstream-Bearer`` header the
+      sidecar injects; :data:`auth.context.request_config` is populated by
+      :class:`DownstreamBearerMiddleware`. The server binds to
+      ``127.0.0.1:8081`` by default because the only legitimate caller is
+      the sidecar over the pod's loopback interface.
+    - ``stdio`` — local escape hatch for running this HTTP server directly
+      without a sidecar in front. Uses the historic env / Docker-secrets
+      config and skips the middleware. Every tool call runs as the single
+      identity in the env; not for multi-tenant use.
+    """
+    # Bind address: loopback by default in http mode (sidecar in same pod);
+    # local devs override MCP_BIND_HOST=0.0.0.0 to reach it from another
+    # machine. Legacy CAI_MCP_HOST / CAI_MCP_PORT still honored as a fallback
+    # so existing dev scripts keep working.
+    default_host = "127.0.0.1" if MCP_MODE == "http" else "0.0.0.0"
+    host = os.getenv("MCP_BIND_HOST", os.getenv("CAI_MCP_HOST", default_host))
+    port = int(os.getenv("MCP_BIND_PORT", os.getenv("CAI_MCP_PORT", "8081")))
+
+    middleware = []
+    if MCP_MODE == "http":
+        # Fail fast at startup if the workbench URL isn't wired — the pod
+        # can't do anything useful without it, and every tool call would
+        # otherwise 500 with a confusing "config missing host" error.
+        workbench_host = resolve_workbench_host()
+
+        # Import Middleware lazily so a broken starlette install doesn't
+        # break stdio-fallback for local devs.
+        from starlette.middleware import Middleware  # noqa: WPS433
+
+        middleware.append(
+            Middleware(DownstreamBearerMiddleware, workbench_host=workbench_host)
+        )
+
+        print("Starting Cloudera AI Workbench MCP HTTP server (multi-tenant mode)")
+        print(f"Workbench host: {workbench_host}")
+        print(f"Binding to:     {host}:{port} (expects translation sidecar in front)")
+        print(f"Tools loaded:   {_count_registered_tools()}")
+        if host != "127.0.0.1":
+            print(
+                "⚠️  Bound to a non-loopback address; make sure the network "
+                "path in front of this server is trusted."
+            )
+    else:
+        # stdio-fallback mode: no middleware, no per-request identity, single
+        # tenant. Validate the env config now so we fail before the first
+        # tool call rather than 500ing on it.
+        config = _read_config_from_env()
+        if not config.get("host") or not config.get("api_key"):
+            print("Error: Missing required configuration for stdio mode")
+            print("Please set CAI_WORKBENCH_HOST and CAI_WORKBENCH_API_KEY")
+            return
+        print("Starting Cloudera AI Workbench MCP HTTP server (stdio-fallback mode)")
+        print(f"Connected to:   {config['host']}")
+        print(f"Binding to:     {host}:{port}")
+        print(f"Tools loaded:   {_count_registered_tools()}")
+        print("⚠️  WARNING: single-tenant, no authentication — dev use only.")
+
+    mcp.run(transport="http", host=host, port=port, middleware=middleware or None)
 
 
 if __name__ == "__main__":

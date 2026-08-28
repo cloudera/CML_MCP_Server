@@ -3,6 +3,8 @@ FROM python:3.12-slim
 
 # Build argument for Cloudera AI Workbench host URL
 ARG CAI_WORKBENCH_HOST
+# Persist as runtime env var so the server can read it at container start
+ENV CAI_WORKBENCH_HOST=${CAI_WORKBENCH_HOST}
 
 # Install system dependencies and UV
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -30,7 +32,7 @@ RUN uv sync --frozen
 RUN if [ -n "${CAI_WORKBENCH_HOST}" ]; then \
         WORKBENCH_DOMAIN=$(echo "${CAI_WORKBENCH_HOST}" | sed 's|https\?://||' | sed 's|/$||'); \
         echo "Installing cmlapi from https://${WORKBENCH_DOMAIN}/api/v2/python.tar.gz"; \
-        uv pip install https://${WORKBENCH_DOMAIN}/api/v2/python.tar.gz; \
+        uv pip install --allow-insecure-host ${WORKBENCH_DOMAIN} https://${WORKBENCH_DOMAIN}/api/v2/python.tar.gz; \
     else \
         echo "Warning: CAI_WORKBENCH_HOST not provided, skipping cmlapi installation"; \
     fi
