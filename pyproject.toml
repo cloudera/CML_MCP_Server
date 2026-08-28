@@ -1,6 +1,6 @@
 [project]
 name = "cai-workbench-mcp-server"
-version = "2.2.0"
+version = "2.2.4"
 description = "Cloudera AI Workbench Model Context Protocol (MCP) Server"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -30,6 +30,7 @@ dependencies = [
     "fastapi>=0.115.0",
     "uvicorn>=0.30.0",
     "sse-starlette>=2.0.0",
+    "starlette>=0.37.0",
     
     # OAuth 2.1 dependencies
     "pyjwt>=2.8.0",
@@ -61,6 +62,7 @@ Repository = "https://github.com/cloudera/CAI_Workbench_MCP_Server.git"
 [project.scripts]
 cai-workbench-mcp-stdio = "cai_workbench_mcp_server.stdio_server:main"
 cai-workbench-mcp-http = "cai_workbench_mcp_server.http_server:main"
+cai-workbench-mcp-sidecar = "cai_workbench_mcp_server.translation_sidecar:main"
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
