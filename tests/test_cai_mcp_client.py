@@ -53,7 +53,7 @@ async def test_server_basics():
         print(f"✅ Found {len(tools)} tools")
         
         # Verify we have the expected number
-        assert len(tools) == 109, f"Expected 109 tools, found {len(tools)}"
+        assert len(tools) == 164, f"Expected 164 tools, found {len(tools)}"
         print("✅ Tool count verified")
 
 

@@ -106,6 +106,62 @@ from .get_default_quota import get_default_quota
 from .get_default_quotas import get_default_quotas
 from .list_all_resource_groups import list_all_resource_groups
 from .list_all_accelerator_node_labels import list_all_accelerator_node_labels
+from .list_projects import list_projects
+from .create_amp import create_amp
+from .list_job_dependencies import list_job_dependencies
+from .get_application_dashboard import get_application_dashboard
+from .validate_custom_runtime import validate_custom_runtime
+from .disable_engines import disable_engines
+from .set_workbench_tls_secret import set_workbench_tls_secret
+from .create_team import create_team
+from .create_synced_team import create_synced_team
+from .delete_team import delete_team
+from .list_synced_team_groups import list_synced_team_groups
+from .add_group_to_synced_team import add_group_to_synced_team
+from .remove_group_from_synced_team import remove_group_from_synced_team
+from .update_group_permission_for_synced_team import update_group_permission_for_synced_team
+from .list_synced_team_members import list_synced_team_members
+from .update_member_permission_for_synced_team import update_member_permission_for_synced_team
+from .rotate_v1_key import rotate_v1_key
+from .get_short_user_by_id import get_short_user_by_id
+from .list_all_run_as_machine_user_collaborators import list_all_run_as_machine_user_collaborators
+from .get_time_series import get_time_series
+from .update_docker_credential import update_docker_credential
+from .update_resource_group import update_resource_group
+from .create_cpu_profile import create_cpu_profile
+from .update_cpu_profile import update_cpu_profile
+from .delete_cpu_profile import delete_cpu_profile
+from .set_default_quota import set_default_quota
+from .set_team_default_quota import set_team_default_quota
+from .latest_sync_status import latest_sync_status
+from .users_sync_status import users_sync_status
+from .teams_sync_status import teams_sync_status
+from .set_workspace_spark_default import set_workspace_spark_default
+from .read_workspace_spark_default import read_workspace_spark_default
+from .read_cml_spark_default import read_cml_spark_default
+from .read_base_cluster_spark_default import read_base_cluster_spark_default
+from .dashboards_archive import dashboards_archive
+from .list_copilot_models import list_copilot_models
+from .get_copilot_model import get_copilot_model
+from .create_copilot_model import create_copilot_model
+from .update_copilot_model import update_copilot_model
+from .delete_copilot_model import delete_copilot_model
+from .list_copilot_embedding_models import list_copilot_embedding_models
+from .get_copilot_embedding_model import get_copilot_embedding_model
+from .create_copilot_embedding_model import create_copilot_embedding_model
+from .update_copilot_embedding_model import update_copilot_embedding_model
+from .delete_copilot_embedding_model import delete_copilot_embedding_model
+from .send_copilot_event import send_copilot_event
+from .create_accelerator_node_label_gpu_profile import create_accelerator_node_label_gpu_profile
+from .update_accelerator_node_label_gpu_profile import update_accelerator_node_label_gpu_profile
+from .delete_accelerator_node_label_gpu_profile import delete_accelerator_node_label_gpu_profile
+from .update_accelerator_labels_admin_config import update_accelerator_labels_admin_config
+from .update_accelerator_labels_default_quota import update_accelerator_labels_default_quota
+from .list_accelerator_based_user_quota import list_accelerator_based_user_quota
+from .update_accelerator_based_user_quota import update_accelerator_based_user_quota
+from .list_accelerator_based_team_quota import list_accelerator_based_team_quota
+from .update_accelerator_based_team_quota import update_accelerator_based_team_quota
+from .validate_api_key_v2 import validate_api_key_v2
 
 __all__ = [
     'upload_file',
@@ -214,4 +270,60 @@ __all__ = [
     "get_default_quotas",
     "list_all_resource_groups",
     "list_all_accelerator_node_labels",
-] 
+    "list_projects",
+    "create_amp",
+    "list_job_dependencies",
+    "get_application_dashboard",
+    "validate_custom_runtime",
+    "disable_engines",
+    "set_workbench_tls_secret",
+    "create_team",
+    "create_synced_team",
+    "delete_team",
+    "list_synced_team_groups",
+    "add_group_to_synced_team",
+    "remove_group_from_synced_team",
+    "update_group_permission_for_synced_team",
+    "list_synced_team_members",
+    "update_member_permission_for_synced_team",
+    "rotate_v1_key",
+    "get_short_user_by_id",
+    "list_all_run_as_machine_user_collaborators",
+    "get_time_series",
+    "update_docker_credential",
+    "update_resource_group",
+    "create_cpu_profile",
+    "update_cpu_profile",
+    "delete_cpu_profile",
+    "set_default_quota",
+    "set_team_default_quota",
+    "latest_sync_status",
+    "users_sync_status",
+    "teams_sync_status",
+    "set_workspace_spark_default",
+    "read_workspace_spark_default",
+    "read_cml_spark_default",
+    "read_base_cluster_spark_default",
+    "dashboards_archive",
+    "list_copilot_models",
+    "get_copilot_model",
+    "create_copilot_model",
+    "update_copilot_model",
+    "delete_copilot_model",
+    "list_copilot_embedding_models",
+    "get_copilot_embedding_model",
+    "create_copilot_embedding_model",
+    "update_copilot_embedding_model",
+    "delete_copilot_embedding_model",
+    "send_copilot_event",
+    "create_accelerator_node_label_gpu_profile",
+    "update_accelerator_node_label_gpu_profile",
+    "delete_accelerator_node_label_gpu_profile",
+    "update_accelerator_labels_admin_config",
+    "update_accelerator_labels_default_quota",
+    "list_accelerator_based_user_quota",
+    "update_accelerator_based_user_quota",
+    "list_accelerator_based_team_quota",
+    "update_accelerator_based_team_quota",
+    "validate_api_key_v2",
+]
