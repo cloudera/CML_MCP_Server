@@ -128,6 +128,62 @@ try:
     from .src.functions.update_job import update_job
     from .src.functions.update_project import update_project
     from .src.functions.update_project_file_metadata import update_project_file_metadata
+    from .src.functions.list_projects import list_projects
+    from .src.functions.create_amp import create_amp
+    from .src.functions.list_job_dependencies import list_job_dependencies
+    from .src.functions.get_application_dashboard import get_application_dashboard
+    from .src.functions.validate_custom_runtime import validate_custom_runtime
+    from .src.functions.disable_engines import disable_engines
+    from .src.functions.set_workbench_tls_secret import set_workbench_tls_secret
+    from .src.functions.create_team import create_team
+    from .src.functions.create_synced_team import create_synced_team
+    from .src.functions.delete_team import delete_team
+    from .src.functions.list_synced_team_groups import list_synced_team_groups
+    from .src.functions.add_group_to_synced_team import add_group_to_synced_team
+    from .src.functions.remove_group_from_synced_team import remove_group_from_synced_team
+    from .src.functions.update_group_permission_for_synced_team import update_group_permission_for_synced_team
+    from .src.functions.list_synced_team_members import list_synced_team_members
+    from .src.functions.update_member_permission_for_synced_team import update_member_permission_for_synced_team
+    from .src.functions.rotate_v1_key import rotate_v1_key
+    from .src.functions.get_short_user_by_id import get_short_user_by_id
+    from .src.functions.list_all_run_as_machine_user_collaborators import list_all_run_as_machine_user_collaborators
+    from .src.functions.get_time_series import get_time_series
+    from .src.functions.update_docker_credential import update_docker_credential
+    from .src.functions.update_resource_group import update_resource_group
+    from .src.functions.create_cpu_profile import create_cpu_profile
+    from .src.functions.update_cpu_profile import update_cpu_profile
+    from .src.functions.delete_cpu_profile import delete_cpu_profile
+    from .src.functions.set_default_quota import set_default_quota
+    from .src.functions.set_team_default_quota import set_team_default_quota
+    from .src.functions.latest_sync_status import latest_sync_status
+    from .src.functions.users_sync_status import users_sync_status
+    from .src.functions.teams_sync_status import teams_sync_status
+    from .src.functions.set_workspace_spark_default import set_workspace_spark_default
+    from .src.functions.read_workspace_spark_default import read_workspace_spark_default
+    from .src.functions.read_cml_spark_default import read_cml_spark_default
+    from .src.functions.read_base_cluster_spark_default import read_base_cluster_spark_default
+    from .src.functions.dashboards_archive import dashboards_archive
+    from .src.functions.list_copilot_models import list_copilot_models
+    from .src.functions.get_copilot_model import get_copilot_model
+    from .src.functions.create_copilot_model import create_copilot_model
+    from .src.functions.update_copilot_model import update_copilot_model
+    from .src.functions.delete_copilot_model import delete_copilot_model
+    from .src.functions.list_copilot_embedding_models import list_copilot_embedding_models
+    from .src.functions.get_copilot_embedding_model import get_copilot_embedding_model
+    from .src.functions.create_copilot_embedding_model import create_copilot_embedding_model
+    from .src.functions.update_copilot_embedding_model import update_copilot_embedding_model
+    from .src.functions.delete_copilot_embedding_model import delete_copilot_embedding_model
+    from .src.functions.send_copilot_event import send_copilot_event
+    from .src.functions.create_accelerator_node_label_gpu_profile import create_accelerator_node_label_gpu_profile
+    from .src.functions.update_accelerator_node_label_gpu_profile import update_accelerator_node_label_gpu_profile
+    from .src.functions.delete_accelerator_node_label_gpu_profile import delete_accelerator_node_label_gpu_profile
+    from .src.functions.update_accelerator_labels_admin_config import update_accelerator_labels_admin_config
+    from .src.functions.update_accelerator_labels_default_quota import update_accelerator_labels_default_quota
+    from .src.functions.list_accelerator_based_user_quota import list_accelerator_based_user_quota
+    from .src.functions.update_accelerator_based_user_quota import update_accelerator_based_user_quota
+    from .src.functions.list_accelerator_based_team_quota import list_accelerator_based_team_quota
+    from .src.functions.update_accelerator_based_team_quota import update_accelerator_based_team_quota
+    from .src.functions.validate_api_key_v2 import validate_api_key_v2
 except ImportError:
     # Direct execution (python cai_workbench_mcp_server/stdio_server.py)
     from src.functions.upload_folder import upload_folder
@@ -239,6 +295,62 @@ except ImportError:
     from src.functions.update_job import update_job
     from src.functions.update_project import update_project
     from src.functions.update_project_file_metadata import update_project_file_metadata
+    from src.functions.list_projects import list_projects
+    from src.functions.create_amp import create_amp
+    from src.functions.list_job_dependencies import list_job_dependencies
+    from src.functions.get_application_dashboard import get_application_dashboard
+    from src.functions.validate_custom_runtime import validate_custom_runtime
+    from src.functions.disable_engines import disable_engines
+    from src.functions.set_workbench_tls_secret import set_workbench_tls_secret
+    from src.functions.create_team import create_team
+    from src.functions.create_synced_team import create_synced_team
+    from src.functions.delete_team import delete_team
+    from src.functions.list_synced_team_groups import list_synced_team_groups
+    from src.functions.add_group_to_synced_team import add_group_to_synced_team
+    from src.functions.remove_group_from_synced_team import remove_group_from_synced_team
+    from src.functions.update_group_permission_for_synced_team import update_group_permission_for_synced_team
+    from src.functions.list_synced_team_members import list_synced_team_members
+    from src.functions.update_member_permission_for_synced_team import update_member_permission_for_synced_team
+    from src.functions.rotate_v1_key import rotate_v1_key
+    from src.functions.get_short_user_by_id import get_short_user_by_id
+    from src.functions.list_all_run_as_machine_user_collaborators import list_all_run_as_machine_user_collaborators
+    from src.functions.get_time_series import get_time_series
+    from src.functions.update_docker_credential import update_docker_credential
+    from src.functions.update_resource_group import update_resource_group
+    from src.functions.create_cpu_profile import create_cpu_profile
+    from src.functions.update_cpu_profile import update_cpu_profile
+    from src.functions.delete_cpu_profile import delete_cpu_profile
+    from src.functions.set_default_quota import set_default_quota
+    from src.functions.set_team_default_quota import set_team_default_quota
+    from src.functions.latest_sync_status import latest_sync_status
+    from src.functions.users_sync_status import users_sync_status
+    from src.functions.teams_sync_status import teams_sync_status
+    from src.functions.set_workspace_spark_default import set_workspace_spark_default
+    from src.functions.read_workspace_spark_default import read_workspace_spark_default
+    from src.functions.read_cml_spark_default import read_cml_spark_default
+    from src.functions.read_base_cluster_spark_default import read_base_cluster_spark_default
+    from src.functions.dashboards_archive import dashboards_archive
+    from src.functions.list_copilot_models import list_copilot_models
+    from src.functions.get_copilot_model import get_copilot_model
+    from src.functions.create_copilot_model import create_copilot_model
+    from src.functions.update_copilot_model import update_copilot_model
+    from src.functions.delete_copilot_model import delete_copilot_model
+    from src.functions.list_copilot_embedding_models import list_copilot_embedding_models
+    from src.functions.get_copilot_embedding_model import get_copilot_embedding_model
+    from src.functions.create_copilot_embedding_model import create_copilot_embedding_model
+    from src.functions.update_copilot_embedding_model import update_copilot_embedding_model
+    from src.functions.delete_copilot_embedding_model import delete_copilot_embedding_model
+    from src.functions.send_copilot_event import send_copilot_event
+    from src.functions.create_accelerator_node_label_gpu_profile import create_accelerator_node_label_gpu_profile
+    from src.functions.update_accelerator_node_label_gpu_profile import update_accelerator_node_label_gpu_profile
+    from src.functions.delete_accelerator_node_label_gpu_profile import delete_accelerator_node_label_gpu_profile
+    from src.functions.update_accelerator_labels_admin_config import update_accelerator_labels_admin_config
+    from src.functions.update_accelerator_labels_default_quota import update_accelerator_labels_default_quota
+    from src.functions.list_accelerator_based_user_quota import list_accelerator_based_user_quota
+    from src.functions.update_accelerator_based_user_quota import update_accelerator_based_user_quota
+    from src.functions.list_accelerator_based_team_quota import list_accelerator_based_team_quota
+    from src.functions.update_accelerator_based_team_quota import update_accelerator_based_team_quota
+    from src.functions.validate_api_key_v2 import validate_api_key_v2
 
 
 def get_config() -> Dict[str, str]:
@@ -2626,6 +2738,466 @@ def download_diag_bundle_tool(request_id: str) -> str:
     return json.dumps(download_diag_bundle(get_config(), {"request_id": request_id}), indent=2)
 
 
+# ==============================================================================
+# NEW TOOLS - 57 additional API tools
+# ==============================================================================
+
+@mcp.tool()
+def list_projects_tool(search_filter: str = None, sort: str = None, page_size: int = None, page_token: str = None, include_public_projects: bool = None, include_all_projects: bool = None) -> str:
+    """List all projects the user has access to, optionally filtered, sorted, and paginated."""
+    params = {k: v for k, v in {"search_filter": search_filter, "sort": sort, "page_size": page_size, "page_token": page_token, "include_public_projects": include_public_projects, "include_all_projects": include_all_projects}.items() if v is not None}
+    return json.dumps(list_projects(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def create_amp_tool(name: str, git_url: str, description: str = None, visibility: str = None, git_ref: str = None, team_name: str = None, runtime_identifier: str = None, execute_amp_steps: bool = True, run_import_tasks: bool = True) -> str:
+    """Create a new AMP (Accelerators for ML Projects) from a git repository URL."""
+    params = {k: v for k, v in {"name": name, "git_url": git_url, "description": description, "visibility": visibility, "git_ref": git_ref, "team_name": team_name, "runtime_identifier": runtime_identifier, "execute_amp_steps": execute_amp_steps, "run_import_tasks": run_import_tasks}.items() if v is not None}
+    return json.dumps(create_amp(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def list_job_dependencies_tool(project_id: str, job_id: str) -> str:
+    """List all jobs in the dependency tree of a given job."""
+    return json.dumps(list_job_dependencies(get_config(), {"project_id": project_id, "job_id": job_id}), indent=2)
+
+
+@mcp.tool()
+def get_application_dashboard_tool(project_id: str, application_id: str) -> str:
+    """List the running engine dashboards for a Cloudera AI application."""
+    return json.dumps(get_application_dashboard(get_config(), {"project_id": project_id, "application_id": application_id}), indent=2)
+
+
+@mcp.tool()
+def validate_custom_runtime_tool(url: str, docker_credential_id: str = None) -> str:
+    """Validate a custom runtime image URL before registering it."""
+    params = {"url": url}
+    if docker_credential_id:
+        params["docker_credential_id"] = docker_credential_id
+    return json.dumps(validate_custom_runtime(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def disable_engines_tool(disable_engines_flag: bool) -> str:
+    """Enable or disable legacy engines across all projects in the workspace.
+
+    Args:
+        disable_engines_flag: True to disable engines, False to enable them
+    """
+    return json.dumps(disable_engines(get_config(), {"disable_engines": disable_engines_flag}), indent=2)
+
+
+@mcp.tool()
+def set_workbench_tls_secret_tool(tls_crt: str, tls_key: str) -> str:
+    """Create or update the TLS certificate secret used by CML Workbenches.
+
+    Args:
+        tls_crt: Base64-encoded PEM certificate content
+        tls_key: Base64-encoded PEM private key content
+    """
+    return json.dumps(set_workbench_tls_secret(get_config(), {"tls_crt": tls_crt, "tls_key": tls_key}), indent=2)
+
+
+@mcp.tool()
+def create_team_tool(username: str, type: str = None, cn: str = None, bio: str = None, permission: str = None) -> str:
+    """Create a new local team in the workspace."""
+    params = {k: v for k, v in {"username": username, "type": type, "cn": cn, "bio": bio, "permission": permission}.items() if v is not None}
+    return json.dumps(create_team(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def create_synced_team_tool(username: str, group_permissions: str, bio: str = None) -> str:
+    """Create a synced team backed by CDP/LDAP groups.
+
+    Args:
+        username: Team name
+        group_permissions: JSON array of {cn, permission} objects e.g. '[{"cn":"mygroup","permission":"read"}]'
+        bio: Optional team description
+    """
+    import json as _json
+    params = {"username": username, "group_permissions": _json.loads(group_permissions) if isinstance(group_permissions, str) else group_permissions}
+    if bio:
+        params["bio"] = bio
+    return json.dumps(create_synced_team(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def delete_team_tool(team_name: str) -> str:
+    """Delete a team from the workspace."""
+    return json.dumps(delete_team(get_config(), {"team_name": team_name}), indent=2)
+
+
+@mcp.tool()
+def list_synced_team_groups_tool(team_name: str) -> str:
+    """List the CDP/LDAP groups associated with a synced team."""
+    return json.dumps(list_synced_team_groups(get_config(), {"team_name": team_name}), indent=2)
+
+
+@mcp.tool()
+def add_group_to_synced_team_tool(team_name: str, cn: str, permission: str) -> str:
+    """Add a CDP/LDAP group to a synced team with a default permission."""
+    return json.dumps(add_group_to_synced_team(get_config(), {"team_name": team_name, "cn": cn, "permission": permission}), indent=2)
+
+
+@mcp.tool()
+def remove_group_from_synced_team_tool(team_name: str, group_id: int) -> str:
+    """Remove a CDP/LDAP group from a synced team by group ID."""
+    return json.dumps(remove_group_from_synced_team(get_config(), {"team_name": team_name, "group_id": group_id}), indent=2)
+
+
+@mcp.tool()
+def update_group_permission_for_synced_team_tool(team_name: str, group_id: int, permission: str) -> str:
+    """Update the default permission for a CDP/LDAP group within a synced team."""
+    return json.dumps(update_group_permission_for_synced_team(get_config(), {"team_name": team_name, "group_id": group_id, "permission": permission}), indent=2)
+
+
+@mcp.tool()
+def list_synced_team_members_tool(team_name: str) -> str:
+    """List all members of a synced team with their CDP group membership info."""
+    return json.dumps(list_synced_team_members(get_config(), {"team_name": team_name}), indent=2)
+
+
+@mcp.tool()
+def update_member_permission_for_synced_team_tool(team_name: str, user_id: int, permission: str) -> str:
+    """Update the effective permission for a specific member within a synced team."""
+    return json.dumps(update_member_permission_for_synced_team(get_config(), {"team_name": team_name, "user_id": user_id, "permission": permission}), indent=2)
+
+
+@mcp.tool()
+def rotate_v1_key_tool(username: str, api_key_expiry_date: str = None, api_key_comments: str = None) -> str:
+    """Rotate the V1 API key for a given user."""
+    params = {k: v for k, v in {"username": username, "api_key_expiry_date": api_key_expiry_date, "api_key_comments": api_key_comments}.items() if v is not None}
+    return json.dumps(rotate_v1_key(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def get_short_user_by_id_tool(user_id: int) -> str:
+    """Fetch abbreviated user information (username, name, email) by user ID."""
+    return json.dumps(get_short_user_by_id(get_config(), {"user_id": user_id}), indent=2)
+
+
+@mcp.tool()
+def list_all_run_as_machine_user_collaborators_tool(project_id: str = None, search_filter: str = None, page_size: int = None, page_token: str = None, sort: str = None) -> str:
+    """List all service account (machine user) collaborators available for run-as in a project."""
+    params = {k: v for k, v in {"project_id": project_id, "search_filter": search_filter, "page_size": page_size, "page_token": page_token, "sort": sort}.items() if v is not None}
+    return json.dumps(list_all_run_as_machine_user_collaborators(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def get_time_series_tool(series_type: str = None, search_filter: str = None, page_token: str = None, multi_column_search_filter: str = None, time_range_search_filter: str = None) -> str:
+    """Fetch time series data for CPU, memory, or GPU usage across workloads."""
+    params = {k: v for k, v in {"series_type": series_type, "search_filter": search_filter, "page_token": page_token, "multi_column_search_filter": multi_column_search_filter, "time_range_search_filter": time_range_search_filter}.items() if v is not None}
+    return json.dumps(get_time_series(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def update_docker_credential_tool(id: str, name: str = None, server: str = None, username: str = None, password: str = None, is_default: bool = None) -> str:
+    """Update an existing Docker registry credential."""
+    params = {k: v for k, v in {"id": id, "name": name, "server": server, "username": username, "password": password, "is_default": is_default}.items() if v is not None}
+    return json.dumps(update_docker_credential(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def update_resource_group_tool(id: int, allow_jobs: bool = None, allow_sessions: bool = None, allow_models: bool = None, allow_applications: bool = None) -> str:
+    """Update workload allowances for an existing resource group."""
+    params = {k: v for k, v in {"id": id, "allow_jobs": allow_jobs, "allow_sessions": allow_sessions, "allow_models": allow_models, "allow_applications": allow_applications}.items() if v is not None}
+    return json.dumps(update_resource_group(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def create_cpu_profile_tool(resource_group_id: int, cpu: float, memory: float) -> str:
+    """Create a new CPU resource profile for a resource group."""
+    return json.dumps(create_cpu_profile(get_config(), {"resource_group_id": resource_group_id, "cpu": cpu, "memory": memory}), indent=2)
+
+
+@mcp.tool()
+def update_cpu_profile_tool(id: int, resource_group_id: int, cpu: float, memory: float) -> str:
+    """Update CPU and memory values for an existing CPU resource profile."""
+    return json.dumps(update_cpu_profile(get_config(), {"id": id, "resource_group_id": resource_group_id, "cpu": cpu, "memory": memory}), indent=2)
+
+
+@mcp.tool()
+def delete_cpu_profile_tool(id: int) -> str:
+    """Delete a CPU resource profile by ID."""
+    return json.dumps(delete_cpu_profile(get_config(), {"id": id}), indent=2)
+
+
+@mcp.tool()
+def set_default_quota_tool(uuid: str, quota: str, sync_mig_to_umbra: bool = None) -> str:
+    """Set the default CPU/memory/GPU quota for a specific user.
+
+    Args:
+        uuid: User UUID
+        quota: JSON object with requests_memory, requests_cpu, requests_gpu e.g. '{"requests_cpu":"2","requests_memory":"4Gi","requests_gpu":"0"}'
+        sync_mig_to_umbra: Optional flag to sync MIG quota
+    """
+    import json as _json
+    params = {"uuid": uuid, "quota": _json.loads(quota) if isinstance(quota, str) else quota}
+    if sync_mig_to_umbra is not None:
+        params["sync_mig_to_umbra"] = sync_mig_to_umbra
+    return json.dumps(set_default_quota(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def set_team_default_quota_tool(uuid: str, quota: str, sync_mig_to_umbra: bool = None) -> str:
+    """Set the default CPU/memory/GPU quota for a specific team.
+
+    Args:
+        uuid: Team UUID
+        quota: JSON object with requests_memory, requests_cpu, requests_gpu
+        sync_mig_to_umbra: Optional flag to sync MIG quota
+    """
+    import json as _json
+    params = {"uuid": uuid, "quota": _json.loads(quota) if isinstance(quota, str) else quota}
+    if sync_mig_to_umbra is not None:
+        params["sync_mig_to_umbra"] = sync_mig_to_umbra
+    return json.dumps(set_team_default_quota(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def latest_sync_status_tool(request_id: str = None) -> str:
+    """Fetch the latest user/team sync status for the workspace."""
+    params = {}
+    if request_id:
+        params["request_id"] = request_id
+    return json.dumps(latest_sync_status(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def users_sync_status_tool(request_id: str = None) -> str:
+    """Fetch the latest user synchronisation status from the identity provider."""
+    params = {}
+    if request_id:
+        params["request_id"] = request_id
+    return json.dumps(users_sync_status(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def teams_sync_status_tool(request_id: str = None) -> str:
+    """Fetch the latest team synchronisation status from the identity provider."""
+    params = {}
+    if request_id:
+        params["request_id"] = request_id
+    return json.dumps(teams_sync_status(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def set_workspace_spark_default_tool(workspace_spark_default: str, is_pushdown: str) -> str:
+    """Set the workspace-level Spark default configuration.
+
+    Args:
+        workspace_spark_default: The Spark default configuration string
+        is_pushdown: 'true' or 'false' - whether this is for pushdown or k8s
+    """
+    return json.dumps(set_workspace_spark_default(get_config(), {"workspace_spark_default": workspace_spark_default, "is_pushdown": is_pushdown}), indent=2)
+
+
+@mcp.tool()
+def read_workspace_spark_default_tool(is_pushdown: str) -> str:
+    """Read the current workspace-level Spark default configuration.
+
+    Args:
+        is_pushdown: 'true' or 'false'
+    """
+    return json.dumps(read_workspace_spark_default(get_config(), {"is_pushdown": is_pushdown}), indent=2)
+
+
+@mcp.tool()
+def read_cml_spark_default_tool(raz_enabled: str, pushdown_enabled: str = None) -> str:
+    """Read the CML-level Spark default for a given RAZ/pushdown context.
+
+    Args:
+        raz_enabled: 'true' or 'false'
+        pushdown_enabled: 'true' or 'false' (optional)
+    """
+    params = {"raz_enabled": raz_enabled}
+    if pushdown_enabled:
+        params["pushdown_enabled"] = pushdown_enabled
+    return json.dumps(read_cml_spark_default(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def read_base_cluster_spark_default_tool() -> str:
+    """Read the base cluster Spark default configuration values."""
+    return json.dumps(read_base_cluster_spark_default(get_config(), {}), indent=2)
+
+
+@mcp.tool()
+def dashboards_archive_tool(days_finished: int = 30) -> str:
+    """Archive engine dashboards that have been finished for more than N days."""
+    return json.dumps(dashboards_archive(get_config(), {"days_finished": days_finished}), indent=2)
+
+
+@mcp.tool()
+def list_copilot_models_tool(search_filter: str = None, sort: str = None, page_size: int = None, page_token: str = None) -> str:
+    """List all Copilot language models, optionally filtered, sorted, and paginated."""
+    params = {k: v for k, v in {"search_filter": search_filter, "sort": sort, "page_size": page_size, "page_token": page_token}.items() if v is not None}
+    return json.dumps(list_copilot_models(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def get_copilot_model_tool(copilot_model_id: str) -> str:
+    """Fetch details of a specific Copilot language model by ID."""
+    return json.dumps(get_copilot_model(get_config(), {"copilot_model_id": copilot_model_id}), indent=2)
+
+
+@mcp.tool()
+def create_copilot_model_tool(provider: str, name: str, endpoint: str = None, enabled: bool = None, default: bool = None, provider_id: str = None) -> str:
+    """Register a new Copilot language model (e.g. Amazon Bedrock or CML Serving)."""
+    params = {k: v for k, v in {"provider": provider, "name": name, "endpoint": endpoint, "enabled": enabled, "default": default, "provider_id": provider_id}.items() if v is not None}
+    return json.dumps(create_copilot_model(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def update_copilot_model_tool(id: str, provider: str = None, name: str = None, endpoint: str = None, enabled: bool = None, default: bool = None, provider_id: str = None) -> str:
+    """Update fields of an existing Copilot language model."""
+    params = {k: v for k, v in {"id": id, "provider": provider, "name": name, "endpoint": endpoint, "enabled": enabled, "default": default, "provider_id": provider_id}.items() if v is not None}
+    return json.dumps(update_copilot_model(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def delete_copilot_model_tool(copilot_model_id: str) -> str:
+    """Delete a Copilot language model by ID."""
+    return json.dumps(delete_copilot_model(get_config(), {"copilot_model_id": copilot_model_id}), indent=2)
+
+
+@mcp.tool()
+def list_copilot_embedding_models_tool(search_filter: str = None, sort: str = None, page_size: int = None, page_token: str = None) -> str:
+    """List all Copilot embedding models, optionally filtered, sorted, and paginated."""
+    params = {k: v for k, v in {"search_filter": search_filter, "sort": sort, "page_size": page_size, "page_token": page_token}.items() if v is not None}
+    return json.dumps(list_copilot_embedding_models(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def get_copilot_embedding_model_tool(copilot_embedding_model_id: str) -> str:
+    """Fetch details of a specific Copilot embedding model by ID."""
+    return json.dumps(get_copilot_embedding_model(get_config(), {"copilot_embedding_model_id": copilot_embedding_model_id}), indent=2)
+
+
+@mcp.tool()
+def create_copilot_embedding_model_tool(provider: str, name: str, endpoint: str = None, enabled: bool = None, default: bool = None, provider_id: str = None) -> str:
+    """Register a new Copilot embedding model for use in Copilot RAG workflows."""
+    params = {k: v for k, v in {"provider": provider, "name": name, "endpoint": endpoint, "enabled": enabled, "default": default, "provider_id": provider_id}.items() if v is not None}
+    return json.dumps(create_copilot_embedding_model(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def update_copilot_embedding_model_tool(id: str, provider: str = None, name: str = None, endpoint: str = None, enabled: bool = None, default: bool = None, provider_id: str = None) -> str:
+    """Update fields of an existing Copilot embedding model."""
+    params = {k: v for k, v in {"id": id, "provider": provider, "name": name, "endpoint": endpoint, "enabled": enabled, "default": default, "provider_id": provider_id}.items() if v is not None}
+    return json.dumps(update_copilot_embedding_model(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def delete_copilot_embedding_model_tool(copilot_embedding_model_id: str) -> str:
+    """Delete a Copilot embedding model by ID."""
+    return json.dumps(delete_copilot_embedding_model(get_config(), {"copilot_embedding_model_id": copilot_embedding_model_id}), indent=2)
+
+
+@mcp.tool()
+def send_copilot_event_tool(event_type: str, engine_id: str = None, application_id: int = None, event_details: str = None, model_provider_id: str = None, model_name: str = None, model_type: str = None, include_selection: bool = None, prompt_word_count: int = None) -> str:
+    """Record a Copilot usage event (chat command, slash command, model selection, etc.)."""
+    params = {k: v for k, v in {"event_type": event_type, "engine_id": engine_id, "application_id": application_id, "event_details": event_details, "model_provider_id": model_provider_id, "model_name": model_name, "model_type": model_type, "include_selection": include_selection, "prompt_word_count": prompt_word_count}.items() if v is not None}
+    return json.dumps(send_copilot_event(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def create_accelerator_node_label_gpu_profile_tool(resource_group_id: int, gpu_count: int, cpu: float = None, memory: float = None) -> str:
+    """Create a GPU profile (cpu/memory allocation per GPU count) for a resource group."""
+    params = {k: v for k, v in {"resource_group_id": resource_group_id, "gpu_count": gpu_count, "cpu": cpu, "memory": memory}.items() if v is not None}
+    return json.dumps(create_accelerator_node_label_gpu_profile(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def update_accelerator_node_label_gpu_profile_tool(resource_group_id: int, id: int, gpu_count: int = None, cpu: float = None, memory: float = None) -> str:
+    """Update CPU/memory for an existing GPU profile on an accelerator node label."""
+    params = {k: v for k, v in {"resource_group_id": resource_group_id, "id": id, "gpu_count": gpu_count, "cpu": cpu, "memory": memory}.items() if v is not None}
+    return json.dumps(update_accelerator_node_label_gpu_profile(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def delete_accelerator_node_label_gpu_profile_tool(resource_group_id: int, id: int) -> str:
+    """Delete a GPU profile from an accelerator node label."""
+    return json.dumps(delete_accelerator_node_label_gpu_profile(get_config(), {"resource_group_id": resource_group_id, "id": id}), indent=2)
+
+
+@mcp.tool()
+def update_accelerator_labels_admin_config_tool(id_max_gpu_workload: str) -> str:
+    """Update the admin_config_max_per_workload for multiple accelerator node labels.
+
+    Args:
+        id_max_gpu_workload: JSON object mapping label_id (str) to max_gpu (int) e.g. '{"1": 4, "2": 8}'
+    """
+    import json as _json
+    params = {"id_max_gpu_workload": _json.loads(id_max_gpu_workload) if isinstance(id_max_gpu_workload, str) else id_max_gpu_workload}
+    return json.dumps(update_accelerator_labels_admin_config(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def update_accelerator_labels_default_quota_tool(id_default_quota: str = None, id_default_team_quota: str = None) -> str:
+    """Update the default_quota and/or default_team_quota for accelerator node labels.
+
+    Args:
+        id_default_quota: JSON object mapping label_id to default quota e.g. '{"1": 2}'
+        id_default_team_quota: JSON object mapping label_id to team default quota
+    """
+    import json as _json
+    params = {}
+    if id_default_quota:
+        params["id_default_quota"] = _json.loads(id_default_quota) if isinstance(id_default_quota, str) else id_default_quota
+    if id_default_team_quota:
+        params["id_default_team_quota"] = _json.loads(id_default_team_quota) if isinstance(id_default_team_quota, str) else id_default_team_quota
+    return json.dumps(update_accelerator_labels_default_quota(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def list_accelerator_based_user_quota_tool(search_filter: str = None, sort: str = None, page_size: int = None, page_token: str = None, display_all: bool = None) -> str:
+    """List per-user GPU quota allocations for each accelerator node label."""
+    params = {k: v for k, v in {"search_filter": search_filter, "sort": sort, "page_size": page_size, "page_token": page_token, "display_all": display_all}.items() if v is not None}
+    return json.dumps(list_accelerator_based_user_quota(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def update_accelerator_based_user_quota_tool(accelerator_based_user_quota: str) -> str:
+    """Update GPU quota allocations for one or more users on accelerator node labels.
+
+    Args:
+        accelerator_based_user_quota: JSON array of {user_id, accelerator_id, gpu_quota} objects
+    """
+    import json as _json
+    params = {"accelerator_based_user_quota": _json.loads(accelerator_based_user_quota) if isinstance(accelerator_based_user_quota, str) else accelerator_based_user_quota}
+    return json.dumps(update_accelerator_based_user_quota(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def list_accelerator_based_team_quota_tool(search_filter: str = None, sort: str = None, page_size: int = None, page_token: str = None, display_all: bool = None) -> str:
+    """List per-team GPU quota allocations for each accelerator node label."""
+    params = {k: v for k, v in {"search_filter": search_filter, "sort": sort, "page_size": page_size, "page_token": page_token, "display_all": display_all}.items() if v is not None}
+    return json.dumps(list_accelerator_based_team_quota(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def update_accelerator_based_team_quota_tool(accelerator_based_team_quota: str) -> str:
+    """Update GPU quota allocations for one or more teams on accelerator node labels.
+
+    Args:
+        accelerator_based_team_quota: JSON array of {team_id, accelerator_id, gpu_quota} objects
+    """
+    import json as _json
+    params = {"accelerator_based_team_quota": _json.loads(accelerator_based_team_quota) if isinstance(accelerator_based_team_quota, str) else accelerator_based_team_quota}
+    return json.dumps(update_accelerator_based_team_quota(get_config(), params), indent=2)
+
+
+@mcp.tool()
+def validate_api_key_v2_tool(audience: str) -> str:
+    """Validate a V2 API key and return its validity and associated username.
+
+    Args:
+        audience: 'API' or 'Application'
+    """
+    return json.dumps(validate_api_key_v2(get_config(), {"audience": audience}), indent=2)
+
+
 def main():
     """Main entry point for the Cloudera AI Workbench MCP STDIO server."""
     # Check required configuration
@@ -2645,7 +3217,7 @@ def main():
     # For STDIO, only log to stderr
     print(f"Starting Cloudera AI Workbench MCP Server (STDIO mode)...", file=sys.stderr)
     print(f"Connected to: {config['host']}", file=sys.stderr)
-    print("105 tools available", file=sys.stderr)
+    print("162 tools available", file=sys.stderr)
     print("🔒 Secure Transport: Using environment variables for authentication", file=sys.stderr)
     
     # Run STDIO server (default transport)
