@@ -125,14 +125,15 @@ from fastmcp import Client
 client = Client("http://localhost:8000/mcp-api")
 ```
 
-## Available Tools (105 total)
+## Available Tools (164 total)
 
-The server exposes **105** tools. The authoritative list is whatever the running server returns from MCP `tools/list` or `GET /debug/tools`. Below is a grouped overview (not every tool is listed).
+The server exposes **164** tools. The authoritative list is whatever the running server returns from MCP `tools/list` or `GET /debug/tools`. Below is a grouped overview.
 
 ### Project management
-- `list_projects_tool`, `get_project_id_tool`, `update_project_tool`
-- `create_project_tool`, `get_project_tool`, `delete_project_tool`, `list_project_names_tool`, `list_teams_tool`
+- `list_projects_tool`, `get_project_id_tool`, `get_project_tool`, `create_project_tool`, `update_project_tool`, `delete_project_tool`
+- `create_amp_tool`, `batch_list_projects_tool`, `list_project_names_tool`
 - `list_project_collaborators_tool`, `add_project_collaborator_tool`, `delete_project_collaborator_tool`
+- `list_all_run_as_machine_user_collaborators_tool`
 
 ### File operations
 - `upload_file_tool`, `upload_folder_tool`, `list_project_files_tool`, `delete_project_file_tool`, `update_project_file_metadata_tool`, `download_project_file_tool`
@@ -140,17 +141,18 @@ The server exposes **105** tools. The authoritative list is whatever the running
 ### Jobs
 - `create_job_tool`, `list_jobs_tool`, `get_job_tool`, `update_job_tool`, `delete_job_tool`, `delete_all_jobs_tool`
 - `create_job_run_tool`, `list_job_runs_tool`, `get_job_run_tool`, `stop_job_run_tool`
+- `list_job_dependencies_tool`
 - Workspace-wide: `list_all_jobs_tool`
 
 ### Models (deployments & builds)
-- `list_models_tool`, `get_model_tool`, `delete_model_tool`, `create_model_tool`, `update_model_tool`
+- `list_models_tool`, `get_model_tool`, `create_model_tool`, `update_model_tool`, `delete_model_tool`
 - `create_model_build_tool`, `list_model_builds_tool`, `get_model_build_tool`, `delete_model_build_tool`
 - `create_model_deployment_tool`, `list_model_deployments_tool`, `get_model_deployment_tool`, `stop_model_deployment_tool`, `restart_model_deployment_tool`
 - Workspace-wide: `list_all_models_tool`
 
 ### Model registry (MLflow-linked)
 - `list_registered_models_tool`, `create_registered_model_tool`, `get_registered_model_tool`, `update_registered_model_tool`, `delete_registered_model_tool`
-- `update_registered_model_version_tool`, `get_registered_model_version_tool`, `delete_registered_model_version_tool`
+- `get_registered_model_version_tool`, `update_registered_model_version_tool`, `delete_registered_model_version_tool`
 
 ### Experiments
 - Per-project: `create_experiment_tool`, `list_experiments_tool`, `get_experiment_tool`, `update_experiment_tool`, `delete_experiment_tool`
@@ -159,17 +161,52 @@ The server exposes **105** tools. The authoritative list is whatever the running
 
 ### Applications
 - `create_application_tool`, `list_applications_tool`, `get_application_tool`, `update_application_tool`, `restart_application_tool`, `stop_application_tool`, `delete_application_tool`
+- `get_application_dashboard_tool`
 
 ### Runtimes, repos, Docker, API keys
-- `get_runtimes_tool`, `list_runtimes_tool`, `list_runtime_addons_tool`, `list_runtime_repos_tool`, `create_runtime_repo_tool`, `delete_runtime_repo_tool`, `update_runtime_repo_tool`
-- `register_custom_runtime_tool`, `update_runtime_status_tool`, `update_runtime_addon_status_tool`
-- `list_docker_credentials_tool`, `create_docker_credential_tool`, `delete_docker_credential_tool`, `set_docker_credential_tool`
-- `list_v2_keys_tool`, `create_v2_key_tool`, `delete_v2_key_tool`, `delete_v2_keys_tool`, `validate_api_key_tool`
+- `get_runtimes_tool`, `list_runtimes_tool`, `list_runtime_addons_tool`, `register_custom_runtime_tool`, `validate_custom_runtime_tool`, `update_runtime_status_tool`, `update_runtime_addon_status_tool`
+- `list_runtime_repos_tool`, `create_runtime_repo_tool`, `update_runtime_repo_tool`, `delete_runtime_repo_tool`
+- `list_docker_credentials_tool`, `create_docker_credential_tool`, `update_docker_credential_tool`, `delete_docker_credential_tool`, `set_docker_credential_tool`
+- `list_v2_keys_tool`, `create_v2_key_tool`, `delete_v2_key_tool`, `delete_v2_keys_tool`, `validate_api_key_tool`, `validate_api_key_v2_tool`, `rotate_v1_key_tool`
 
-### Quotas, workload, platform
-- `list_cpu_profiles_tool`, `list_groups_quota_tool`, `list_users_quota_tool`, `list_teams_accelerator_quota_tool`, `list_users_accelerator_quota_tool`, `list_usage_tool`
-- `get_default_quota_tool`, `get_default_quotas_tool`, `list_all_resource_groups_tool`, `list_all_accelerator_node_labels_tool`
-- `list_news_feeds_tool`, `list_ml_serving_apps_tool`, `list_workload_executions_tool`, `list_workload_status_tool`, `list_workload_types_tool`
+### Teams & synced teams
+- `list_teams_tool`, `create_team_tool`, `delete_team_tool`
+- `create_synced_team_tool`, `list_synced_team_groups_tool`, `add_group_to_synced_team_tool`, `remove_group_from_synced_team_tool`, `update_group_permission_for_synced_team_tool`
+- `list_synced_team_members_tool`, `update_member_permission_for_synced_team_tool`
+
+### Users
+- `get_short_user_by_id_tool`
+
+### Quotas & resource management
+- `list_cpu_profiles_tool`, `create_cpu_profile_tool`, `update_cpu_profile_tool`, `delete_cpu_profile_tool`
+- `list_users_quota_tool`, `list_groups_quota_tool`, `list_teams_accelerator_quota_tool`, `list_users_accelerator_quota_tool`
+- `get_default_quota_tool`, `get_default_quotas_tool`, `set_default_quota_tool`, `set_team_default_quota_tool`
+- `list_all_resource_groups_tool`, `update_resource_group_tool`
+- `list_all_accelerator_node_labels_tool`
+- `create_accelerator_node_label_gpu_profile_tool`, `update_accelerator_node_label_gpu_profile_tool`, `delete_accelerator_node_label_gpu_profile_tool`
+- `update_accelerator_labels_admin_config_tool`, `update_accelerator_labels_default_quota_tool`
+- `list_accelerator_based_user_quota_tool`, `update_accelerator_based_user_quota_tool`
+- `list_accelerator_based_team_quota_tool`, `update_accelerator_based_team_quota_tool`
+
+### Copilot models
+- `list_copilot_models_tool`, `get_copilot_model_tool`, `create_copilot_model_tool`, `update_copilot_model_tool`, `delete_copilot_model_tool`
+- `list_copilot_embedding_models_tool`, `get_copilot_embedding_model_tool`, `create_copilot_embedding_model_tool`, `update_copilot_embedding_model_tool`, `delete_copilot_embedding_model_tool`
+- `send_copilot_event_tool`
+
+### Spark & platform configuration
+- `set_workspace_spark_default_tool`, `read_workspace_spark_default_tool`, `read_cml_spark_default_tool`, `read_base_cluster_spark_default_tool`
+- `disable_engines_tool`, `set_workbench_tls_secret_tool`, `dashboards_archive_tool`
+
+### Sync status
+- `latest_sync_status_tool`, `users_sync_status_tool`, `teams_sync_status_tool`
+
+### Workload, usage & monitoring
+- `list_usage_tool`, `get_time_series_tool`
+- `list_ml_serving_apps_tool`, `list_workload_executions_tool`, `list_workload_status_tool`, `list_workload_types_tool`
+- `list_news_feeds_tool`
+
+### Diagnostics & health
+- `health_check_tool`, `generate_diag_bundle_tool`, `get_diag_bundle_status_tool`, `download_diag_bundle_tool`
 
 
 ## Examples
